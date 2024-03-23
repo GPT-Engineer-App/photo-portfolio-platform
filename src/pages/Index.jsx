@@ -1,8 +1,23 @@
-import React from "react";
-import { Box, VStack, HStack, Heading, Text, Image, Button, Grid, FormControl, FormLabel, Input, Textarea, useToast } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, VStack, HStack, Heading, Text, Button, FormControl, FormLabel, Input, Textarea, useToast } from "@chakra-ui/react";
+import PhotoGrid from "../components/PhotoGrid";
 import { FaInstagram, FaFacebook, FaTwitter } from "react-icons/fa";
 
+import { useRef } from "react";
+
 const Index = () => {
+  const [photos, setPhotos] = useState(["https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBwb3J0cmFpdCUyMHBob3RvZ3JhcGh5JTIwJTI0JTdCbnVtJTdEfGVufDB8fHx8MTcxMTE2ODA3NHww&ixlib=rb-4.0.3&q=80&w=1080"]);
+  const fileInputRef = useRef();
+
+  const handlePhotoUpload = () => {
+    const newPhotoURL = "https://via.placeholder.com/150";
+    setPhotos([...photos, newPhotoURL]);
+  };
+
+  const handleRemovePhoto = (index) => {
+    const newPhotos = photos.filter((_, i) => i !== index);
+    setPhotos(newPhotos);
+  };
   const toast = useToast();
 
   const handleSubmit = (e) => {
@@ -29,12 +44,20 @@ const Index = () => {
         </Text>
       </Box>
 
-      {/* Portfolio */}
-      <Grid templateColumns={["1fr", "repeat(2, 1fr)", "repeat(3, 1fr)"]} gap={8} my={12}>
-        {[1, 2, 3, 4, 5, 6].map((num) => (
-          <Image key={num} src={`https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1MDcxMzJ8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBwb3J0cmFpdCUyMHBob3RvZ3JhcGh5JTIwJTI0JTdCbnVtJTdEfGVufDB8fHx8MTcxMTE2ODA3NHww&ixlib=rb-4.0.3&q=80&w=1080`} alt={`Portfolio ${num}`} />
-        ))}
-      </Grid>
+      {}
+      <Box my={12}>
+        <Heading as="h2" size="xl" mb={4}>
+          Editable Portfolio
+        </Heading>
+        <input type="file" ref={fileInputRef} style={{ display: "none" }} />
+        <Button onClick={() => fileInputRef.current.click()} colorScheme="blue" mb={4}>
+          Upload Photo
+        </Button>
+        <Button onClick={handlePhotoUpload} colorScheme="green" mb={4}>
+          Add to Portfolio
+        </Button>
+        <PhotoGrid photos={photos} onRemove={handleRemovePhoto} />
+      </Box>
 
       {/* About */}
       <Box my={12} maxW="3xl" mx="auto">
